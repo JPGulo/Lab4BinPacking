@@ -5,23 +5,42 @@ public class Main {
         int B = 20; // bin capacity
         int numBins = 3;
 
-        // Custom Test
-        List<Integer> items = Arrays.asList(12, 4, 8, 15, 9, 3, 1, 10);
-        System.out.println("Custom Test Output #1:");
+
+
+
+
+        // Example from assignment description
+
+        List<Integer> itemsExample = Arrays.asList(12, 4, 8, 15, 9, 3, 1, 10);
+        System.out.println("example items from assignment description:");
+        BinPacker packerExample = new BinPacker(B, numBins);
+        packerExample.packItemsBFI(new ArrayList<>(itemsExample));
+        packerExample.printResult();
+        System.out.println();
+        
+        
+        
+        // Optimized test case
+
+        List<Integer> items = Arrays.asList(5,10,1,9,10,9,4,3,2);
+        System.out.println("Optimal Output #1:");
         BinPacker packer = new BinPacker(B, numBins);
         packer.packItemsBFI(new ArrayList<>(items));
         packer.printResult();
         System.out.println();
 
-        List<Integer> items2 = Arrays.asList(6, 6, 6, 4, 4, 4, 4, 4);
-        System.out.println("Custom Test Output #2:");
+        List<Integer> items2 = Arrays.asList(10,10,10,5,5,5,5,5,5);
+        System.out.println("Optimal Output #2:");
         BinPacker packer2 = new BinPacker(B, numBins);
         packer2.packItemsBFI(new ArrayList<>(items2));
         packer2.printResult();
         System.out.println();
 
-        List<Integer> items3 = Arrays.asList(16, 16, 5, 4, 4, 4, 4, 4);
-        System.out.println("Custom Test Output #3:");
+
+        // unoptimized test case
+        
+        List<Integer> items3 = Arrays.asList(15,15,15,5,4,4,1,1);
+        System.out.println("unoptimized solution:");
         BinPacker packer3 = new BinPacker(B, numBins);
         packer3.packItemsBFI(new ArrayList<>(items3));
         packer3.printResult();
