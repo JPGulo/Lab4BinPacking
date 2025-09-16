@@ -3,47 +3,74 @@
 // we are using the Best Fit Increasing strategy
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BinPacker {
-    private int binCapacity;
-    private int numBins;
-    private List<List<Integer>> bins;
-    private List<Integer> unpackedItems;
+    private final int binCapacity;
+    private final int numBins;
+    private final List<List<Integer>> bins = new ArrayList<>();
+    private final List<Integer> unpackedItems = new ArrayList<>();
 
+
+    // Constructor, takes bin capacity and number of bins, create empty bins, and
+    // states how big each bin can be.
     public BinPacker(int binCapacity, int numBins) {
         this.binCapacity = binCapacity;
         this.numBins = numBins;
-        this.bins = new ArrayList<>();
-        this.unpackedItems = new ArrayList<>();
-        for (int i = 0; i < numBins; i++) {
-            bins.add(new ArrayList<>());
-        }
+        for (int i = 0; i < numBins; i++) bins.add(new ArrayList<>());
     }
 
+    // Every time this function is called, it clears out the bins and repacks
+    // the items.
+    // Items that are too big for any bin are automatically unpacked.
+    // The rest are sorted in decreasing order, and the first N items are placed
     public void packItemsBFI(List<Integer> items) {
-        // Sort items in increasing order
-        Collections.sort(items);
+        for (List<Integer> b : bins) { b.clear(); }
+        unpackedItems.clear();
 
-        for (int item : items) {
-            int bestBin = -1;
-            int minSpaceLeft = Integer.MAX_VALUE;
+        List<Integer> tooBig = items.stream().filter(x -> x > binCapacity).collect(Collectors.toList());
+        List<Integer> candidates = items.stream().filter(x -> x <= binCapacity).collect(Collectors.toList());
 
-            // Try placing into the best-fitting bin
+        candidates.sort(Comparator.reverseOrder());
+
+        int seed = Math.min(numBins, candidates.size());
+        int[] sums = new int[numBins];
+        for (int i = 0; i < seed; i++) {
+            int x = candidates.get(i);
+            bins.get(i).add(x);
+            sums[i] += x;
+        }
+
+        List<Integer> remaining = candidates.subList(seed, candidates.size());
+
+        int totalPackedable = candidates.stream().mapToInt(Integer::intValue).sum();
+        int target = Math.min(binCapacity, (int)Math.ceil(totalPackedable / (double)numBins));
+
+        for (int x : remaining) {
+            int best = -1;
+            int bestPrimary = Integer.MAX_VALUE;
+            int bestSecondary = Integer.MIN_VALUE;
             for (int i = 0; i < numBins; i++) {
-                int used = bins.get(i).stream().mapToInt(Integer::intValue).sum();
-                int spaceLeft = binCapacity - used;
-                if (item <= spaceLeft && (spaceLeft - item) < minSpaceLeft) {
-                    bestBin = i;
-                    minSpaceLeft = spaceLeft - item;
+                if (sums[i] + x <= binCapacity) {
+                    int newSum = sums[i] + x;
+                    int primary = Math.abs(newSum - target);
+                    int secondary = binCapacity - newSum;
+                    if (primary < bestPrimary || (primary == bestPrimary && secondary > bestSecondary)) {
+                        bestPrimary = primary;
+                        bestSecondary = secondary;
+                        best = i;
+                    }
                 }
             }
-
-            if (bestBin != -1) {
-                bins.get(bestBin).add(item);
+            if (best >= 0) {
+                bins.get(best).add(x);
+                sums[best] += x;
             } else {
-                unpackedItems.add(item);
+                unpackedItems.add(x);
             }
         }
+
+        unpackedItems.addAll(tooBig);
     }
 
     public void printResult() {
@@ -52,10 +79,10 @@ public class BinPacker {
             int used = bins.get(i).stream().mapToInt(Integer::intValue).sum();
             int unused = binCapacity - used;
             totalUnused += unused;
-            System.out.println("Bin " + (i + 1) + ": " + bins.get(i) + " | unused = " + unused);
+            System.out.println("Bin " + (i + 1) + " (sum=" + used + "): " + bins.get(i) + " | unused = " + unused);
         }
-
         System.out.println("Unpacked items: " + unpackedItems);
         System.out.println("Total unused space = " + totalUnused);
     }
+
 }
