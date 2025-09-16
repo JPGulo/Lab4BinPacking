@@ -5,10 +5,6 @@ public class Main {
         int B = 20; // bin capacity
         int numBins = 3;
 
-
-
-
-
         // Example from assignment description
 
         List<Integer> itemsExample = Arrays.asList(12, 4, 8, 15, 9, 3, 1, 10);

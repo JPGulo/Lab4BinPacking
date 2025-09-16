@@ -12,23 +12,17 @@ public class BinPacker {
     private final List<Integer> unpackedItems = new ArrayList<>();
 
 
-    // Constructor, takes bin capacity and number of bins, create empty bins, and
-    // states how big each bin can be.
+  
     public BinPacker(int binCapacity, int numBins) {
         this.binCapacity = binCapacity;
         this.numBins = numBins;
         for (int i = 0; i < numBins; i++) bins.add(new ArrayList<>());
     }
 
-    // Every time this function is called, it clears out the bins and repacks
-    // the items.
-    // Items that are too big for any bin are automatically unpacked.
-    // The rest are sorted in decreasing order, and the first N items are placed
     public void packItemsBFI(List<Integer> items) {
         for (List<Integer> b : bins) { b.clear(); }
         unpackedItems.clear();
-
-        List<Integer> tooBig = items.stream().filter(x -> x > binCapacity).collect(Collectors.toList());
+        
         List<Integer> candidates = items.stream().filter(x -> x <= binCapacity).collect(Collectors.toList());
 
         candidates.sort(Comparator.reverseOrder());
@@ -69,8 +63,6 @@ public class BinPacker {
                 unpackedItems.add(x);
             }
         }
-
-        unpackedItems.addAll(tooBig);
     }
 
     public void printResult() {
