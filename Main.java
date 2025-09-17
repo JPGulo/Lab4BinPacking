@@ -18,7 +18,7 @@ public class Main {
         
         // Optimized test case
 
-        List<Integer> items = Arrays.asList(5,10,1,9,10,9,4,3,2);
+        List<Integer> items = Arrays.asList(20, 14, 3 ,3 ,17 ,13 ,17, 13);
         System.out.println("Optimal Output #1:");
         BinPacker packer = new BinPacker(B, numBins);
         packer.packItemsBFI(new ArrayList<>(items));
@@ -34,8 +34,9 @@ public class Main {
 
 
         // unoptimized test case
-        
-        List<Integer> items3 = Arrays.asList(15,15,15,5,4,4,1,1);
+        // bins 3 is not close to being around the same unused
+        // sum of the other bins.
+        List<Integer> items3 = Arrays.asList(9, 8, 7, 3, 3, 3, 3, 3, 4);
         System.out.println("unoptimized solution:");
         BinPacker packer3 = new BinPacker(B, numBins);
         packer3.packItemsBFI(new ArrayList<>(items3));

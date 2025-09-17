@@ -1,7 +1,7 @@
 // was reading this file https://www.geeksforgeeks.org/dsa/bin-packing-problem-minimize-number-of-used-bins/
-
+// To get output run the tests in main.
 // we are using the Best Fit Increasing strategy
-
+// Big O should be n log n.
 import java.util.*;
 import java.util.stream.Collectors;
 
